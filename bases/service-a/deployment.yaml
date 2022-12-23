@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  deploy
+
+spec:
+  selector:
+    matchLabels:
+      appsvc: svc # will be replaced by kustomization
+  
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name:  app
+        image:  nginx:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort:  80
+          name:  app-port
+        envFrom:
+          - configMapRef:
+              name: cm

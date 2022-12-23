@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../bases/spring-config
+  - ./service-a
+  - ../../bases/service-b
+
+components:
+  - ../../bases/components/app-config
+
+configMapGenerator:
+  - name: app-cm
+    literals:
+      - SHARED_PARAM=dev-value
+      - ADDITIONAL_SHARED_PARAM=dev-value
+    behavior: merge
+
+labels:
+  - pairs:
+      app: sample-app
+
+patches:
+  - target:
+      kind: Deployment
+    path: ./patches/set-image-pull-policy-always.yaml
